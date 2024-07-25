@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: keycloak-multi-tenant-config
+
+scheme: http
+origins: ${scheme}://localhost:4200
+keycloak-port: 8080
+keycloak-issuer: https://oidc.c4-soft.com/auth/realms/master
+cognito-issuer: https://cognito-idp.us-west-2.amazonaws.com/us-west-2_RzhmgLwjl
+auth0-issuer: https://dev-ch4mpy.eu.auth0.com/
+
+server:
+  error:
+    include-message: always
+  ssl:
+    enabled: false
+  port: 8011
+
+spring-addons:
+  issuers:
+    - uri: http://localhost:8080/auth/realms/REALM_SPRING_API
+      username-json-path: $.preferred_username
+      claims:
+        - jsonPath: $.realm_access.roles
+        - jsonPath: $.resource_access.*.roles
+    - uri: http://localhost:8080/auth/realms/INTERNO
+      username-json-path: $.preferred_username
+      claims:
+        - jsonPath: $.realm_access.roles
+        - jsonPath: $.resource_access.*.roles
+    - uri: http://localhost:8080/auth/realms/EXTERNO
+      username-json-path: $.preferred_username
+      claims:
+        - jsonPath: $.realm_access.roles
+        - jsonPath: $.resource_access.*.roles
+
+---
+scheme: https
+keycloak-port: 8443
+
+server:
+  ssl:
+    enabled: true
+
+spring:
+  config:
+    activate:
+      on-profile: ssl

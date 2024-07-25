@@ -1,0 +1,1 @@
+# keycloak-multi-tenant-config
